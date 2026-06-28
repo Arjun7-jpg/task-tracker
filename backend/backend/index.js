@@ -39,7 +39,7 @@ const Task = mongoose.model('Task', taskSchema);
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { username, email, password, fullName } = req.body;
-        
+
         if (!username || !email || !password) {
             return res.status(400).json({ message: 'All fields are required' });
         }
