@@ -8,9 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/tasktracker')
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.error(err));
+// CRITICAL FIX: Use environment variable for production, fallback to localhost for development
+mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/tasktracker')
+    .then(() => console.log('✅ MongoDB Connected'))
+    .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -168,4 +169,4 @@ app.delete('/api/tasks/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
