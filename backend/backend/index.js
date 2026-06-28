@@ -5,15 +5,17 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
-// CRITICAL FIX: Use environment variable for production, fallback to localhost for development
 mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/tasktracker')
     .then(() => console.log('✅ MongoDB Connected'))
     .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
-// User Schema
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true, trim: true },
     email: { type: String, required: true, unique: true, trim: true },
@@ -23,7 +25,6 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
-// Task Schema (now with userId)
 const taskSchema = new mongoose.Schema({
     title: { type: String, required: true, trim: true },
     description: { type: String, trim: true },
@@ -35,9 +36,6 @@ const taskSchema = new mongoose.Schema({
 });
 const Task = mongoose.model('Task', taskSchema);
 
-// ============ AUTH ROUTES ============
-
-// Signup
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { username, email, password, fullName } = req.body;
@@ -64,7 +62,6 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 });
 
-// Login
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -88,7 +85,6 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-// Get current user
 app.get('/api/auth/user/:id', async (req, res) => {
     try {
         const user = await User.findById(req.params.id).select('-password');
@@ -98,8 +94,6 @@ app.get('/api/auth/user/:id', async (req, res) => {
         res.status(500).json({ message: 'Server Error', error: error.message });
     }
 });
-
-// ============ TASK ROUTES (now filtered by user) ============
 
 app.get('/api/tasks', async (req, res) => {
     try {
