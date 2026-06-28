@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
-const API_URL = 'http://localhost:5001/api/auth';
+const API_URL = 'https://task-tracker-g4kh.onrender.com/api/auth';
 
 const Auth = () => {
     const [isLogin, setIsLogin] = useState(true);

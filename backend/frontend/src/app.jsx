@@ -8,7 +8,7 @@ import Calendar from './components/Calendar';
 import Auth from './components/Auth';
 import { AuthContext } from './context/AuthContext';
 
-const API_URL = 'http://localhost:5001/api/tasks';
+const API_URL = 'https://task-tracker-g4kh.onrender.com/api/tasks';
 
 function App() {
   const { user, logout, loading: authLoading } = useContext(AuthContext);
